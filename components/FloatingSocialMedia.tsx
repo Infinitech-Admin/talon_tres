@@ -69,7 +69,7 @@ const ALL_LINKS: SocialLink[] = [
   {
     name: "Facebook",
     icon: Facebook,
-    url: "https://facebook.com/bgytalondos",
+    url: "https://www.facebook.com/barangaytalontresofficialpage/",
     color: "bg-red-600 hover:bg-red-700",
     external: true,
   },
@@ -84,7 +84,7 @@ const ALL_LINKS: SocialLink[] = [
   {
     name: "Messenger",
     icon: MessengerIcon,
-    url: "https://m.me/bgytalondos",
+    url: "",
     color: "bg-transparent",
     external: true,
   },
@@ -98,7 +98,7 @@ const ALL_LINKS: SocialLink[] = [
   {
     name: "Email",
     icon: Mail,
-    url: "mailto:barangaytalondos@gmail.com",
+    url: "mailto:lucenacarestalontres@gmail.com",
     color: "bg-red-500 hover:bg-red-600",
     external: false,
   },
