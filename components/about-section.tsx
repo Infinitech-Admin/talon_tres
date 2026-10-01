@@ -10,7 +10,7 @@ export default function AboutSection() {
   const stats = [
     {
       icon: Users,
-      number: "44,000+",
+      number: "33,000+",
       label: "Proud Residents",
     },
     {
@@ -103,12 +103,13 @@ export default function AboutSection() {
 
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
               Nestled in the City of Las Piñas, Metro Manila, Barangay Talon
-              Tres was created on April 3, 1978 under Presidential Decree No.
-              1335, formed when the subdivisions of BF Resort, Sta. Cecilia,
-              Sarino, Mother Earth, Camela, and San Beda were detached from the
-              original Barangay Talon. Today it is home to over 44,000
-              residents, making it one of the most populous barangays in the
-              city.
+              Tres was created on April 3, 1978, under Presidential Decree No.
+              1336. It was formed when the subdivisions of Carmencita,
+              Paramount, Admiral Park, Pelayo, Aristocrat, Doña Purisima, and
+              Golden Gate were detached from the original Barangay Talon to form
+              a distinct and independent barangay. Today, Barangay Talon Tres is
+              home to more than 33,000 residents, making it one of the larger
+              barangays in Las Piñas City.
             </p>
 
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
