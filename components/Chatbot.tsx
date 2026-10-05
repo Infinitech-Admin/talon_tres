@@ -11,6 +11,242 @@ interface Message {
   quickReplies?: string[];
 }
 
+/* ------------------------------------------------------------------ */
+/* BARANGAY DATA — edit here only.                                     */
+/* Items marked CONFIRM could not be verified online; please check     */
+/* with the Barangay Hall before publishing.                           */
+/* ------------------------------------------------------------------ */
+const BRGY = {
+  name: "Barangay Talon Tres",
+  city: "Las Piñas City, Metro Manila",
+  phone: "(02) 8800-7688",
+  // CONFIRM: sources list different street names (San Pablo St., San Isidro St.)
+  address:
+    "Barangay Hall, Talon Tres, Las Piñas City (near Alabang–Zapote Road)",
+  // CONFIRM: add the barangay's official email / Facebook page
+  email: "",
+  facebook: "",
+  // CONFIRM: office hours
+  hours: "Monday to Friday, 8:00 AM – 5:00 PM",
+  nationalEmergency: "911",
+};
+
+const MAIN_MENU = [
+  "Our Mission",
+  "Our Vision",
+  "Our Values",
+  "Contact Info",
+  "Office Hours",
+  "Services",
+];
+
+const REQUIREMENTS_NOTE =
+  "Requirements may vary, so please confirm with the Barangay Hall before going.";
+
+type Rule = {
+  test: (m: string) => boolean;
+  reply: Message;
+};
+
+// helper: match whole words so "hi" doesn't match "this", "id" doesn't match "individual"
+const hasWord = (m: string, ...words: string[]) =>
+  words.some((w) => new RegExp(`\\b${w}\\b`, "i").test(m));
+const has = (m: string, ...parts: string[]) => parts.some((p) => m.includes(p));
+
+// Order matters: specific topics first, general ones last.
+const RULES: Rule[] = [
+  {
+    test: (m) => has(m, "mission"),
+    reply: {
+      type: "bot",
+      text: "🎯 Our Mission:\n\nTo deliver efficient, responsive, and inclusive barangay services that promote the welfare and development of every resident of Talon Tres, Las Piñas City.\n\nWe are committed to accessible, transparent, and quality public service for our community.",
+      quickReplies: ["Our Vision", "Our Values", "Contact Info", "Services"],
+    },
+  },
+  {
+    test: (m) => has(m, "vision"),
+    reply: {
+      type: "bot",
+      text: "🌟 Our Vision:\n\nA progressive, peaceful, and united Barangay Talon Tres where every resident enjoys a good quality of life through cooperative governance and sustainable development.\n\nWe aim to be a model community in Las Piñas City.",
+      quickReplies: ["Our Mission", "Our Values", "Contact Info", "Services"],
+    },
+  },
+  {
+    test: (m) => has(m, "values"),
+    reply: {
+      type: "bot",
+      text: "💎 Our Values:\n\n• Malasakit – We care for our residents\n• Transparency – We serve with honesty and openness\n• Unity (Bayanihan) – We work together as one community\n• Service Excellence – We give our best to every resident",
+      quickReplies: ["Our Mission", "Our Vision", "Visit Us", "Contact Info"],
+    },
+  },
+  {
+    test: (m) => has(m, "visit", "where", "location", "address", "saan"),
+    reply: {
+      type: "bot",
+      text: `📍 Visit Us:\n\n${BRGY.name} Hall\n${BRGY.address}\n${BRGY.city}\n\nLandmarks nearby: Alabang–Zapote Road, CAA Road, Admiral Road, and Robinsons Las Piñas (all in Talon Tres).\n\nResidents are welcome to visit for barangay concerns, assistance, and inquiries.`,
+      quickReplies: ["Office Hours", "Contact Info", "Services"],
+    },
+  },
+  {
+    test: (m) => has(m, "emergency", "hotline", "police", "fire", "ambulance"),
+    reply: {
+      type: "bot",
+      text: `🚨 Emergency:\n\nNational Emergency Hotline: ${BRGY.nationalEmergency}\n\nFor barangay concerns and assistance, call the Barangay Hall at ${BRGY.phone} during office hours.\n\nFor life-threatening situations, always call ${BRGY.nationalEmergency} first.`,
+      quickReplies: ["Contact Info", "Blotter", "Office Hours"],
+    },
+  },
+  {
+    test: (m) => has(m, "contact", "phone", "number", "email", "call"),
+    reply: {
+      type: "bot",
+      text: `📞 Contact Us:\n\n• Phone: ${BRGY.phone}\n${BRGY.email ? `• Email: ${BRGY.email}\n` : ""}${BRGY.facebook ? `• Facebook: ${BRGY.facebook}\n` : ""}• Office: ${BRGY.address}\n\nFeel free to reach out through any of these channels!`,
+      quickReplies: ["Office Hours", "Visit Us", "Services"],
+    },
+  },
+  {
+    test: (m) =>
+      has(m, "hours", "schedule", "open", "oras") || hasWord(m, "time"),
+    reply: {
+      type: "bot",
+      text: `🕐 Office Hours:\n\n${BRGY.hours}\n\nClosed on weekends and public holidays. For emergencies, call ${BRGY.nationalEmergency}.`,
+      quickReplies: ["Services", "Contact Info", "Visit Us"],
+    },
+  },
+  {
+    test: (m) => has(m, "clearance"),
+    reply: {
+      type: "bot",
+      text: `📋 Barangay Clearance\n\nA certificate showing you are a resident in good standing, commonly needed for employment, business, or other transactions.\n\nUsual requirements:\n• Valid ID with Talon Tres address (or proof of residency)\n• Cedula (Community Tax Certificate)\n• Processing fee\n\n${REQUIREMENTS_NOTE}`,
+      quickReplies: ["Cedula", "Residency", "Office Hours", "Services"],
+    },
+  },
+  {
+    test: (m) => has(m, "cedula", "community tax"),
+    reply: {
+      type: "bot",
+      text: `📄 Cedula (Community Tax Certificate)\n\nUsual requirements:\n• Valid ID\n• Basic personal details (TIN, income details if applicable)\n• Payment of the tax\n\n${REQUIREMENTS_NOTE}`,
+      quickReplies: ["Clearance", "Office Hours", "Contact Info", "Services"],
+    },
+  },
+  {
+    test: (m) => has(m, "business", "permit"),
+    reply: {
+      type: "bot",
+      text: `🏢 Barangay Business Clearance\n\nFor businesses operating in Talon Tres. The barangay clearance is one of the requirements for the city business permit from Las Piñas City Hall.\n\nUsual requirements:\n• Valid ID of owner\n• DTI/SEC registration (as applicable)\n• Proof of business location (lease or title)\n• Processing fee\n\n${REQUIREMENTS_NOTE}`,
+      quickReplies: ["Clearance", "Office Hours", "Contact Info", "Services"],
+    },
+  },
+  {
+    test: (m) => has(m, "indigency", "indigent"),
+    reply: {
+      type: "bot",
+      text: `📄 Certificate of Indigency\n\nFor qualified residents who need it for medical, educational, or legal assistance.\n\nUsual requirements:\n• Valid ID\n• Proof of residency\n• Purpose of the certificate\n\nSubject to barangay assessment and verification. ${REQUIREMENTS_NOTE}`,
+      quickReplies: ["Residency", "Office Hours", "Contact Info", "Services"],
+    },
+  },
+  {
+    test: (m) => has(m, "residency", "residence", "resident certificate"),
+    reply: {
+      type: "bot",
+      text: `🏠 Certificate of Residency\n\nProof that you live in Barangay Talon Tres.\n\nUsual requirements:\n• Valid ID\n• Proof of address (utility bill, lease contract, etc.)\n• Processing fee\n\n${REQUIREMENTS_NOTE}`,
+      quickReplies: ["Clearance", "Indigency", "Office Hours", "Services"],
+    },
+  },
+  {
+    test: (m) => has(m, "good moral", "moral"),
+    reply: {
+      type: "bot",
+      text: `✅ Certificate of Good Moral Character\n\nUsually needed for school, employment, or other applications.\n\nUsual requirements:\n• Valid ID\n• Barangay Clearance\n• Purpose of the certificate\n• Processing fee\n\n${REQUIREMENTS_NOTE}`,
+      quickReplies: ["Clearance", "Office Hours", "Contact Info", "Services"],
+    },
+  },
+  {
+    test: (m) => has(m, "blotter", "incident", "report", "complaint"),
+    reply: {
+      type: "bot",
+      text: `📝 Barangay Blotter\n\nYou can report and record incidents such as:\n• Theft or lost items\n• Disturbances or noise complaints\n• Minor disputes between neighbors\n\nVisit the Barangay Hall and bring a valid ID and any evidence or witnesses, if available.\n\nFor emergencies, call ${BRGY.nationalEmergency}.`,
+      quickReplies: ["Emergency", "Mediation", "Contact Info", "Services"],
+    },
+  },
+  {
+    test: (m) => has(m, "mediation", "lupon", "dispute", "katarungang"),
+    reply: {
+      type: "bot",
+      text: "⚖️ Mediation (Lupong Tagapamayapa)\n\nUnder the Katarungang Pambarangay system, the barangay helps settle disputes between neighbors, families, or residents through mediation, conciliation, and arbitration before a case goes to court.\n\nVisit the Barangay Hall to file a complaint or request mediation, and bring relevant documents.",
+      quickReplies: ["Blotter", "Office Hours", "Contact Info", "Services"],
+    },
+  },
+  {
+    test: (m) => has(m, "senior", "pwd", "disab"),
+    reply: {
+      type: "bot",
+      text: "👴👵♿ Senior Citizen & PWD Assistance\n\nThe barangay can guide you on:\n• Senior Citizen and PWD ID applications\n• Referrals to Las Piñas City programs (OSCA and PDAO)\n• Assistance with available benefits\n\nBring a valid ID, proof of residency, and supporting documents (e.g., birth certificate, medical certificate for PWD).",
+      quickReplies: ["Office Hours", "Contact Info", "Services"],
+    },
+  },
+  {
+    test: (m) => has(m, "health", "medical", "doctor", "clinic"),
+    reply: {
+      type: "bot",
+      text: `🏥 Health Services\n\nFor health concerns, check with the Barangay Hall or your nearest health center under the Las Piñas City Health Office for available services such as consultations, immunization, and maternal care.\n\nSchedules vary, so please call ${BRGY.phone} to confirm.`,
+      quickReplies: ["Office Hours", "Contact Info", "Services"],
+    },
+  },
+  {
+    test: (m) => hasWord(m, "id", "barangay id"),
+    reply: {
+      type: "bot",
+      text: "🪪 Barangay ID\n\nPlease visit the Barangay Hall during office hours and bring a valid ID and proof of residency. Ask the staff about the current requirements and fees.",
+      quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
+    },
+  },
+  {
+    test: (m) => has(m, "service"),
+    reply: {
+      type: "bot",
+      text: "🏛️ Barangay Services:\n\n• Barangay Clearance\n• Cedula (Community Tax Certificate)\n• Business Clearance\n• Certificate of Indigency\n• Certificate of Residency\n• Good Moral Certificate\n• Barangay Blotter\n• Mediation (Lupon)\n• Senior Citizen & PWD Assistance\n\nWhich one do you need?",
+      quickReplies: ["Clearance", "Cedula", "Business Permit", "Indigency"],
+    },
+  },
+  {
+    test: (m) =>
+      hasWord(
+        m,
+        "hello",
+        "hi",
+        "hey",
+        "kumusta",
+        "good morning",
+        "good afternoon",
+      ),
+    reply: {
+      type: "bot",
+      text: `Hello! 👋 Kumusta! How can I help you with ${BRGY.name} services today?`,
+      quickReplies: ["Our Mission", "Services", "Contact Info", "Office Hours"],
+    },
+  },
+  {
+    test: (m) => has(m, "thank", "salamat"),
+    reply: {
+      type: "bot",
+      text: "Walang anuman! You're welcome! 😊 Feel free to ask if you need anything else. Mabuhay ang Talon Tres!",
+      quickReplies: ["Our Mission", "Services", "Contact Info"],
+    },
+  },
+];
+
+const FALLBACK: Message = {
+  type: "bot",
+  text: `Sorry, I don't have information on that yet. For details, please visit ${BRGY.name} Hall during office hours or call ${BRGY.phone}.`,
+  quickReplies: ["Services", "Contact Info", "Office Hours", "Visit Us"],
+};
+
+const getBotResponse = (message: string): Message => {
+  const m = message.toLowerCase().trim();
+  const match = RULES.find((rule) => rule.test(m));
+  return match ? match.reply : FALLBACK;
+};
+
 export default function Chatbot() {
   const pathname = usePathname();
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -18,15 +254,8 @@ export default function Chatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       type: "bot",
-      text: "Hi there! 👋 I'm your Talon Tres Barangay Assistant. How can I help you today?",
-      quickReplies: [
-        "Our Mission",
-        "Our Vision",
-        "Our Values",
-        "Contact Info",
-        "Office Hours",
-        "Services",
-      ],
+      text: `Hi there! 👋 I'm your ${BRGY.name} Assistant. How can I help you today?`,
+      quickReplies: MAIN_MENU,
     },
   ]);
   const [inputMessage, setInputMessage] = useState("");
@@ -53,13 +282,10 @@ export default function Chatbot() {
     const messageToSend = message || inputMessage;
     if (messageToSend.trim() === "") return;
 
-    // Add user message
     setMessages((prev) => [...prev, { type: "user", text: messageToSend }]);
 
-    // Simulate bot response
     setTimeout(() => {
-      const botResponse = getBotResponse(messageToSend);
-      setMessages((prev) => [...prev, botResponse]);
+      setMessages((prev) => [...prev, getBotResponse(messageToSend)]);
     }, 800);
 
     setInputMessage("");
@@ -67,223 +293,6 @@ export default function Chatbot() {
 
   const handleQuickReply = (reply: string) => {
     handleSendMessage(reply);
-  };
-
-  const getBotResponse = (message: string): Message => {
-    const lowerMessage = message.toLowerCase();
-
-    if (lowerMessage.includes("mission") || lowerMessage === "our mission") {
-      return {
-        type: "bot",
-        text: "🎯 Our Mission:\n\nTo provide efficient, responsive, and inclusive barangay services that promote the welfare and development of every resident of Talon Tres.\n\nWe are committed to delivering accessible, transparent, and quality services that address the needs of our community.",
-        quickReplies: ["Our Vision", "Our Values", "Contact Info", "Services"],
-      };
-    } else if (
-      lowerMessage.includes("vision") ||
-      lowerMessage === "our vision"
-    ) {
-      return {
-        type: "bot",
-        text: "🌟 Our Vision:\n\nA progressive, peaceful, and united Barangay Talon Tres where every resident enjoys a high quality of life through collaborative governance and sustainable development.\n\nWe envision our barangay as a model community in Las Piñas City, where tradition meets innovation for the betterment of all.",
-        quickReplies: ["Our Mission", "Our Values", "Contact Info", "Services"],
-      };
-    } else if (
-      lowerMessage.includes("values") ||
-      lowerMessage === "our values"
-    ) {
-      return {
-        type: "bot",
-        text: "💎 Our Values:\n\n• Malasakit - We care deeply for our residents\n• Transparency - We operate with honesty and openness\n• Unity - We work together as one community\n• Service Excellence - We deliver the best for our barangay\n\nBarangay Talon Tres is dedicated to serving our community with integrity, fostering grassroots participation, and creating opportunities for every resident to thrive.",
-        quickReplies: ["Our Mission", "Our Vision", "Visit Us", "Contact Info"],
-      };
-    } else if (lowerMessage.includes("visit") || lowerMessage === "visit us") {
-      return {
-        type: "bot",
-        text: "📍 Visit Us:\n\nBarangay Talon Tres Office\nP1 Metals Rd., Camella 4A\nLas Piñas City, Metro Manila\nPhilippines\n\nWe welcome all residents to visit us for any barangay concerns, assistance, or inquiries. Our staff is ready to serve you!",
-        quickReplies: [
-          "Office Hours",
-          "Contact Info",
-          "Services",
-          "Our Mission",
-        ],
-      };
-    } else if (
-      lowerMessage.includes("hello") ||
-      lowerMessage.includes("hi") ||
-      lowerMessage.includes("kumusta")
-    ) {
-      return {
-        type: "bot",
-        text: "Hello! 👋 Kumusta! How can I help you with Barangay Talon Tres services today?",
-        quickReplies: [
-          "Our Mission",
-          "Our Vision",
-          "Services",
-          "Contact Info",
-          "Office Hours",
-        ],
-      };
-    } else if (
-      lowerMessage.includes("service") ||
-      lowerMessage.includes("services")
-    ) {
-      return {
-        type: "bot",
-        text: "🏛️ Barangay Services Available:\n\n• Barangay Clearance\n• Cedula (Community Tax Certificate)\n• Business Permit\n• Indigency Certificate\n• Residency Certificate\n• Good Moral Certificate\n• Barangay Blotter\n\nWhat specific service do you need?",
-        quickReplies: ["Clearance", "Cedula", "Business Permit", "Indigency"],
-      };
-    } else if (
-      lowerMessage.includes("contact") ||
-      lowerMessage === "contact info"
-    ) {
-      return {
-        type: "bot",
-        text: "📞 Contact Us:\n\n• Phone: (02) 8872-9664\n• Email: barangay.pamplonatres.lpc@gmail.com\n• Office: P1 Metals Rd., Camella 4A, Las Piñas, Philippines\n\nFeel free to reach out through any of these channels!",
-        quickReplies: ["Office Hours", "Visit Us", "Services", "Our Mission"],
-      };
-    } else if (
-      lowerMessage.includes("hours") ||
-      lowerMessage.includes("time") ||
-      lowerMessage.includes("schedule") ||
-      lowerMessage === "office hours"
-    ) {
-      return {
-        type: "bot",
-        text: "🕐 Office Hours:\n\nMonday to Friday\n8:00 AM - 5:00 PM\n\n⚠️ For emergencies, please contact our barangay hotline.\n\nNeed help with a specific service?",
-        quickReplies: ["Services", "Contact Info", "Visit Us"],
-      };
-    } else if (
-      lowerMessage.includes("clearance") ||
-      lowerMessage.includes("barangay clearance")
-    ) {
-      return {
-        type: "bot",
-        text: "📋 Barangay Clearance:\n\nApply for barangay clearance certificate\n\nRequirements:\n• Valid ID\n• Cedula\n• Recent Photo (1x1)\n• Processing Fee\n\nVisit the Barangay Hall during office hours. Processing time is usually same day.\n\nNeed help with anything else?",
-        quickReplies: ["Office Hours", "Contact Info", "Services", "Cedula"],
-      };
-    } else if (
-      lowerMessage.includes("barangay id") ||
-      lowerMessage.includes("id")
-    ) {
-      return {
-        type: "bot",
-        text: "🪪 Need a Barangay ID?\n\nPlease visit the Barangay Hall for ID processing during office hours. Bring valid identification and proof of residency.\n\nWhat else can I help you with?",
-        quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
-      };
-    } else if (
-      lowerMessage.includes("cedula") ||
-      lowerMessage.includes("community tax")
-    ) {
-      return {
-        type: "bot",
-        text: "📄 Cedula (Community Tax Certificate):\n\nCommunity tax certificate application\n\nRequirements:\n• Valid ID\n• Proof of income (for employed)\n• Real property declaration (if applicable)\n• Payment of tax\n\nVisit the Barangay Hall during office hours.\n\nWhat else can I help you with?",
-        quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
-      };
-    } else if (
-      lowerMessage.includes("business permit") ||
-      lowerMessage.includes("permit")
-    ) {
-      return {
-        type: "bot",
-        text: "🏢 Business Permit:\n\nBusiness permit assistance for barangay endorsement\n\nRequirements:\n• Valid ID\n• Business registration documents\n• Proof of business location\n• Barangay Clearance\n\nThe barangay will provide endorsement for your city business permit application.\n\nNeed help with anything else?",
-        quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
-      };
-    } else if (
-      lowerMessage.includes("residency") ||
-      lowerMessage.includes("residence certificate")
-    ) {
-      return {
-        type: "bot",
-        text: "🏠 Residency Certificate:\n\nProof of residency certification\n\nRequirements:\n• Valid ID\n• Proof of residency (utility bills, rental contract, etc.)\n• Barangay Clearance\n• Processing Fee\n\nFor new residents, minimum of 6 months residency may be required.\n\nWhat else can I help you with?",
-        quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
-      };
-    } else if (
-      lowerMessage.includes("good moral") ||
-      lowerMessage.includes("moral certificate")
-    ) {
-      return {
-        type: "bot",
-        text: "✅ Good Moral Certificate:\n\nCertificate of good moral character\n\nRequirements:\n• Valid ID\n• Barangay Clearance\n• Purpose of certificate (employment, school, etc.)\n• No pending cases in the barangay\n• Processing Fee\n\nVisit the Barangay Hall for processing.\n\nNeed help with anything else?",
-        quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
-      };
-    } else if (
-      lowerMessage.includes("blotter") ||
-      lowerMessage.includes("incident") ||
-      lowerMessage.includes("report")
-    ) {
-      return {
-        type: "bot",
-        text: "📝 Barangay Blotter:\n\nReport and record incidents\n\nYou can file a blotter report for:\n• Theft or lost items\n• Disturbances\n• Minor disputes\n• Incidents within the barangay\n\nVisit the Barangay Hall to file a report. Bring valid ID and any evidence or witnesses if available.\n\nFor emergencies, call our hotline immediately!",
-        quickReplies: ["Emergency", "Mediation", "Contact Info", "Services"],
-      };
-    } else if (
-      lowerMessage.includes("health") ||
-      lowerMessage.includes("medical") ||
-      lowerMessage === "health services"
-    ) {
-      return {
-        type: "bot",
-        text: "🏥 Health Services:\n\nAvailable at the Barangay Health Center:\n• Free medical consultations\n• Immunizations for children\n• Prenatal care\n• Family planning\n• Blood pressure monitoring\n• Dental services (schedule varies)\n\nHealth Center Hours: Mon-Fri, 8:00 AM - 4:00 PM",
-        quickReplies: ["Office Hours", "Contact Info", "Services"],
-      };
-    } else if (
-      lowerMessage.includes("mediation") ||
-      lowerMessage.includes("lupon") ||
-      lowerMessage.includes("dispute")
-    ) {
-      return {
-        type: "bot",
-        text: "⚖️ Mediation Services (Lupong Tagapamayapa):\n\nWe help resolve disputes between neighbors, families, or community members through:\n• Mediation\n• Conciliation\n• Arbitration\n\nVisit the Barangay Hall to file a complaint or request mediation. Bring relevant documents and both parties if possible.",
-        quickReplies: ["Office Hours", "Contact Info", "Services"],
-      };
-    } else if (
-      lowerMessage.includes("indigency") ||
-      lowerMessage === "indigency"
-    ) {
-      return {
-        type: "bot",
-        text: "📄 Certificate of Indigency:\n\nCertificate of indigency for qualified residents\n\nRequirements:\n• Valid ID\n• Proof of residency\n• Barangay Clearance\n• Purpose of certificate (medical, educational, legal aid, etc.)\n• Proof of financial status\n\nSubject to barangay assessment and verification.\n\nVisit the Barangay Hall for processing.",
-        quickReplies: ["Office Hours", "Contact Info", "Services", "Clearance"],
-      };
-    } else if (
-      lowerMessage.includes("senior") ||
-      lowerMessage.includes("pwd")
-    ) {
-      return {
-        type: "bot",
-        text: "👴👵♿ Senior Citizen & PWD Assistance:\n\nWe provide:\n• Senior Citizen ID\n• PWD ID\n• Assistance with benefits\n• Referrals to city programs\n• Monthly assistance programs\n\nVisit during office hours with required documents (birth certificate, medical certificate for PWD).",
-        quickReplies: ["Office Hours", "Contact Info", "Services"],
-      };
-    } else if (
-      lowerMessage.includes("emergency") ||
-      lowerMessage.includes("hotline")
-    ) {
-      return {
-        type: "bot",
-        text: "🚨 Emergency Contacts:\n\nBarangay Hotline: (02) 8872-9664\n\nLas Piñas City Police Station (Brgy. Talon Tres):\n• (02) 8718-221\n• (02) 8808-7395\n\nMedical Emergency: 911\n\nFor barangay concerns, contact our hotline anytime!",
-        quickReplies: ["Contact Info", "Services", "Office Hours"],
-      };
-    } else if (
-      lowerMessage.includes("thank") ||
-      lowerMessage.includes("salamat")
-    ) {
-      return {
-        type: "bot",
-        text: "Walang anuman! You're welcome! 😊 Feel free to ask if you need any other assistance. Mabuhay ang Talon Tres!",
-        quickReplies: ["Our Mission", "Services", "Contact Info"],
-      };
-    } else {
-      return {
-        type: "bot",
-        text: "Thank you for your message! For detailed information, please visit Barangay Talon Tres Hall during office hours or contact us through our hotline and social media channels. We're here to serve you!",
-        quickReplies: [
-          "Our Mission",
-          "Services",
-          "Contact Info",
-          "Office Hours",
-        ],
-      };
-    }
   };
 
   return (
@@ -364,11 +373,14 @@ export default function Chatbot() {
             </div>
             <div className="flex-1">
               <h3 className="font-bold text-lg">Talon Tres Assistant</h3>
-              <p className="text-xs text-red-100">Barangay Las Piñas City</p>
+              <p className="text-xs text-red-100">
+                Barangay Talon Tres, Las Piñas City
+              </p>
             </div>
             <button
               onClick={() => setIsChatOpen(false)}
               className="hover:bg-white/20 p-1 rounded transition-colors"
+              aria-label="Close chat"
             >
               <X className="w-5 h-5" />
             </button>
@@ -420,13 +432,14 @@ export default function Chatbot() {
                 type="text"
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+                onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
                 placeholder="Type your message..."
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#b91c1c] focus:border-transparent text-sm"
               />
               <button
                 onClick={() => handleSendMessage()}
                 className="bg-[#b91c1c] text-white p-2 rounded-full hover:bg-[#7f1d1d] transition-colors"
+                aria-label="Send message"
               >
                 <Send className="w-5 h-5" />
               </button>

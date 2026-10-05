@@ -4,6 +4,28 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Mail, Phone, MapPin, Facebook, Instagram } from "lucide-react";
 
+/* ------------------------------------------------------------------ */
+/* BARANGAY DATA — edit here only.                                     */
+/* CONFIRM items could not be verified online; check with the hall.    */
+/* ------------------------------------------------------------------ */
+const FOOTER = {
+  // Verified in barangay directory listings
+  phoneDisplay: "(02) 8800-7688",
+  phoneTel: "+63288007688",
+  // CONFIRM: add the official barangay email. The row is hidden while empty.
+  email: "",
+  // CONFIRM: sources list different streets (San Pablo St., San Isidro St.)
+  address: "Barangay Hall, Talon Tres, Las Piñas City, Metro Manila",
+  // CONFIRM: these were already in your site; verify they are the official pages
+  facebook: "https://www.facebook.com/barangaytalontresofficialpage/",
+  instagram:
+    "https://www.instagram.com/explore/locations/109724504123691/talon-tres-las-pinas/",
+};
+
+const MAP_LINK = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  "Barangay Talon Tres Barangay Hall, Las Piñas City",
+)}`;
+
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-white relative overflow-hidden">
@@ -22,22 +44,25 @@ export default function Footer() {
               Barangay Talon Tres
             </h3>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
-              Delivering quality government services to Las Piñas City residents
+              Serving the residents of Talon Tres, Las Piñas City with
+              efficient, transparent, and responsive barangay services.
             </p>
 
             <div className="flex gap-3">
               <a
-                href="https://www.facebook.com/bgytalondos"
+                href={FOOTER.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Barangay Talon Tres on Facebook"
                 className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gray-800 hover:bg-[#b91c1c] flex items-center justify-center transition-all"
               >
                 <Facebook className="w-4 h-4 md:w-5 md:h-5" />
               </a>
               <a
-                href="https://www.instagram.com/bgytalondos/"
+                href={FOOTER.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Talon Tres on Instagram"
                 className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gray-800 hover:bg-[#b91c1c] flex items-center justify-center transition-all"
               >
                 <Instagram className="w-4 h-4 md:w-5 md:h-5" />
@@ -122,37 +147,38 @@ export default function Footer() {
                   <Phone className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 </div>
                 <a
-                  href="tel:288711048"
+                  href={`tel:${FOOTER.phoneTel}`}
                   className="text-gray-300 text-sm hover:text-red-400 transition-colors"
                 >
-                  288711048
+                  {FOOTER.phoneDisplay}
                 </a>
               </li>
 
-              <li className="flex items-start gap-2 md:gap-3 group">
-                <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0 group-hover:bg-[#b91c1c] transition-all">
-                  <Mail className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                </div>
-                <a
-                  href="mailto:barangaytalondos@gmail.com"
-                  className="text-gray-300 text-sm hover:text-red-400 transition-colors break-all"
-                >
-                  barangaytalondos@gmail.com
-                </a>
-              </li>
+              {FOOTER.email && (
+                <li className="flex items-start gap-2 md:gap-3 group">
+                  <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0 group-hover:bg-[#b91c1c] transition-all">
+                    <Mail className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                  </div>
+                  <a
+                    href={`mailto:${FOOTER.email}`}
+                    className="text-gray-300 text-sm hover:text-red-400 transition-colors break-all"
+                  >
+                    {FOOTER.email}
+                  </a>
+                </li>
+              )}
 
               <li className="flex items-start gap-2 md:gap-3 group">
                 <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0 group-hover:bg-[#b91c1c] transition-all">
                   <MapPin className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 </div>
                 <a
-                  href="https://www.google.com/maps/search/?api=1&query=Carnival+Park+St,+BF+Resort+Village,+Talon+Dos,+Las+Pi%C3%B1as,+Philippines"
+                  href={MAP_LINK}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-300 text-sm hover:text-red-400 transition-colors"
                 >
-                  Carnival Park St., BF Resort Village, Talon Tres, Las Piñas,
-                  Philippines
+                  {FOOTER.address}
                 </a>
               </li>
             </ul>

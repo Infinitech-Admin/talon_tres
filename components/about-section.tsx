@@ -2,7 +2,23 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Home, CalendarDays, Award, X, ZoomIn } from "lucide-react";
+import { Users, MapPin, CalendarDays, Award, X, ZoomIn } from "lucide-react";
+
+/* ------------------------------------------------------------------ */
+/* BARANGAY DATA — edit here only.                                     */
+/* Sources: PD No. 1336 (Apr 3, 1978), PSA 2024 POPCEN.                */
+/* CONFIRM items need checking with the Barangay Hall.                 */
+/* ------------------------------------------------------------------ */
+const ABOUT = {
+  population: "33,192", // 2024 POPCEN (PSA)
+  foundedYear: "1978", // PD No. 1336, signed April 3, 1978
+  originalSubdivisions: 7, // Carmencita, Paramount, Admiral Park, Pelayo, Aristocrat, Doña Purisima, Golden Gate
+  officialsTotal: 11, // CONFIRM: 9 elected + 2 appointive
+  electedOfficials: 9, // Punong Barangay, 7 Kagawad, SK Chairperson
+  appointiveStaff: 2, // Barangay Secretary, Barangay Treasurer
+  barangaysInCity: 20, // Las Piñas City
+  term: "2023–2026", // CONFIRM: update after the next barangay elections
+};
 
 export default function AboutSection() {
   const [isImageModalOpen, setIsImageModalOpen] = React.useState(false);
@@ -10,32 +26,34 @@ export default function AboutSection() {
   const stats = [
     {
       icon: Users,
-      number: "33,000+",
-      label: "Proud Residents",
+      number: ABOUT.population,
+      label: "Residents (2024 Census)",
     },
     {
-      icon: Home,
-      number: "13,000+",
-      label: "Households",
+      icon: MapPin,
+      number: String(ABOUT.originalSubdivisions),
+      label: "Original Subdivisions",
     },
     {
       icon: CalendarDays,
-      number: "1978",
-      label: "Barangay Founded",
+      number: ABOUT.foundedYear,
+      label: "Barangay Created",
     },
     {
       icon: Award,
-      number: "11",
+      number: String(ABOUT.officialsTotal),
       label: "Barangay Officials",
     },
   ];
 
   const highlights = [
-    "Delivering efficient and responsive barangay services",
-    "Fostering unity through community events and festivals",
-    "Championing environmental sustainability initiatives",
-    "Empowering residents through livelihood and skills programs",
+    "Delivering efficient and responsive barangay services to every resident",
+    "Providing barangay clearances, certificates, and community assistance",
+    "Settling neighborhood disputes through the Lupong Tagapamayapa",
+    "Working with Las Piñas City on health, peace and order, and community programs",
   ];
+
+  const caption = `Barangay Officials & Staff ${ABOUT.term}`;
 
   return (
     <section
@@ -102,20 +120,20 @@ export default function AboutSection() {
             <div className="w-20 h-1.5 bg-[#b91c1c] rounded-full mb-6" />
 
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              Nestled in the City of Las Piñas, Metro Manila, Barangay Talon
-              Tres was created on April 3, 1978, under Presidential Decree No.
-              1336. It was formed when the subdivisions of Carmencita,
-              Paramount, Admiral Park, Pelayo, Aristocrat, Doña Purisima, and
-              Golden Gate were detached from the original Barangay Talon to form
-              a distinct and independent barangay. Today, Barangay Talon Tres is
-              home to more than 33,000 residents, making it one of the larger
-              barangays in Las Piñas City.
+              Barangay Talon Tres is in the City of Las Piñas, Metro Manila. It
+              was created on April 3, 1978, under Presidential Decree No. 1336,
+              when the subdivisions of Carmencita, Paramount, Admiral Park,
+              Pelayo, Aristocrat, Doña Purisima, and Golden Gate were detached
+              from Barangay Talon to form a distinct and independent barangay.
+              Today it is home to more than 33,000 residents, according to the
+              2024 Census of Population.
             </p>
 
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-              Our barangay is more than just a place—it's a home where families
-              grow, businesses flourish, and every voice matters. We take pride
-              in:
+              Located along the busy Alabang–Zapote Road, our barangay is home
+              to families, schools, and businesses, including Robinsons Las
+              Piñas. We are committed to serving every resident with malasakit,
+              transparency, and unity. Our work includes:
             </p>
 
             <ul className="space-y-4">
@@ -184,7 +202,6 @@ export default function AboutSection() {
             className="relative rounded-3xl overflow-hidden shadow-2xl group cursor-pointer"
             onClick={() => setIsImageModalOpen(true)}
           >
-            {/* Placeholder for team image - replace with actual image */}
             <div className="aspect-[21/9] bg-[#eaf0fb] relative">
               <img
                 src="/our-team2.jpg"
@@ -213,7 +230,7 @@ export default function AboutSection() {
               className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent"
             >
               <h4 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                Barangay Officials & Staff 2023–2026
+                {caption}
               </h4>
               <p className="text-white/90 text-lg">
                 Together, building a stronger community for all
@@ -221,7 +238,7 @@ export default function AboutSection() {
             </motion.div>
           </motion.div>
 
-          {/* Team stats reflecting the current (2023-2026) term */}
+          {/* Team stats */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -229,19 +246,25 @@ export default function AboutSection() {
             className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6"
           >
             <div className="text-center p-6 rounded-2xl bg-white shadow-lg border border-slate-100">
-              <div className="text-3xl font-bold text-[#b91c1c] mb-2">9</div>
+              <div className="text-3xl font-bold text-[#b91c1c] mb-2">
+                {ABOUT.electedOfficials}
+              </div>
               <div className="text-gray-700 font-medium">Elected Officials</div>
             </div>
 
             <div className="text-center p-6 rounded-2xl bg-white shadow-lg border border-slate-100">
-              <div className="text-3xl font-bold text-[#b91c1c] mb-2">2</div>
+              <div className="text-3xl font-bold text-[#b91c1c] mb-2">
+                {ABOUT.appointiveStaff}
+              </div>
               <div className="text-gray-700 font-medium">Appointive Staff</div>
             </div>
 
             <div className="text-center p-6 rounded-2xl bg-white shadow-lg border border-slate-100">
-              <div className="text-3xl font-bold text-[#b91c1c] mb-2">24/7</div>
+              <div className="text-3xl font-bold text-[#b91c1c] mb-2">
+                {ABOUT.barangaysInCity}
+              </div>
               <div className="text-gray-700 font-medium">
-                Service Commitment
+                Barangays in Las Piñas City
               </div>
             </div>
           </motion.div>
@@ -266,6 +289,7 @@ export default function AboutSection() {
             <button
               className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all group z-50"
               onClick={() => setIsImageModalOpen(false)}
+              aria-label="Close image"
             >
               <X className="w-6 h-6 text-white group-hover:rotate-90 transition-transform duration-300" />
             </button>
@@ -288,7 +312,7 @@ export default function AboutSection() {
               {/* Image caption */}
               <div className="mt-6 text-center">
                 <h4 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                  Barangay Officials & Staff 2023–2026
+                  {caption}
                 </h4>
                 <p className="text-white/80 text-lg">
                   Together, building a stronger community for all

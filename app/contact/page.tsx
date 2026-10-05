@@ -6,11 +6,36 @@ import PageLayout from "@/components/page-layout";
 import Link from "next/link";
 import { useState } from "react";
 
-function Map() {
+/* ------------------------------------------------------------------ */
+/* BARANGAY DATA — edit here only.                                     */
+/* CONFIRM items could not be verified online; check with the hall.    */
+/* ------------------------------------------------------------------ */
+const CONTACT = {
+  // Verified in barangay directory listings
+  phoneDisplay: "(02) 8800-7688",
+  phoneTel: "+63288007688",
+  // CONFIRM: sources list different streets (San Pablo St., San Isidro St.).
+  // Replace with the exact street address once confirmed.
+  address: "Barangay Hall, Talon Tres, Las Piñas City, Metro Manila",
+  // CONFIRM: add the official barangay email. The card is hidden while empty.
+  email: "",
+  // CONFIRM: office hours
+  hours: "Monday - Friday: 8:00 AM - 5:00 PM",
+};
+
+// Search-based map links: no hard-coded coordinates, so no wrong pin.
+const MAP_QUERY = encodeURIComponent(
+  "Barangay Talon Tres Barangay Hall, Las Piñas City",
+);
+const MAP_LINK = `https://www.google.com/maps/search/?api=1&query=${MAP_QUERY}`;
+const MAP_EMBED = `https://www.google.com/maps?q=${MAP_QUERY}&output=embed`;
+
+function MapEmbed() {
   return (
     <div className="w-full h-[500px]">
       <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3863.5080063712476!2d120.97978174729064!3d14.455493844679417!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397cde32848c3d7%3A0xeeaef0ae39538a8b!2s1%20Metals%20Rd%2C%20Las%20Pi%C3%B1as%2C%201750%20Metro%20Manila!5e0!3m2!1sen!2sph!4v1763974724562!5m2!1sen!2sph"
+        src={MAP_EMBED}
+        title="Barangay Talon Tres location map"
         className="w-full h-full rounded-xl border-0"
         allowFullScreen
         loading="lazy"
@@ -100,10 +125,46 @@ export default function ContactPage() {
     }
   };
 
+  const contactItems = [
+    {
+      icon: MapPin,
+      title: "Office Location",
+      details: CONTACT.address,
+      link: MAP_LINK,
+      isExternal: true,
+    },
+    {
+      icon: Phone,
+      title: "Phone",
+      details: CONTACT.phoneDisplay,
+      link: `tel:${CONTACT.phoneTel}`,
+      isExternal: false,
+    },
+    // Only shown once an official email is set in CONTACT.email
+    ...(CONTACT.email
+      ? [
+          {
+            icon: Mail,
+            title: "Email",
+            details: CONTACT.email,
+            link: `mailto:${CONTACT.email}`,
+            isExternal: false,
+          },
+        ]
+      : []),
+    {
+      icon: Clock,
+      title: "Office Hours",
+      details: CONTACT.hours,
+      link: null as string | null,
+      isExternal: false,
+    },
+  ];
+
   return (
     <PageLayout
       title="Contact Us"
-      subtitle="Get in touch with Talon Tres Community"
+      subtitle="Get in touch with Barangay Talon Tres, Las Piñas City"
       image="/newspaper-journalism-city-news.jpg"
     >
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -281,37 +342,7 @@ export default function ContactPage() {
             transition={{ delay: 0.2 }}
             className="space-y-6"
           >
-            {[
-              {
-                icon: MapPin,
-                title: "Office Location",
-                details: "P1 Metals Rd., Camella 4A, Las Piñas, Philippines",
-                link: "https://maps.app.goo.gl/8kzbXckLdXSNE96z5",
-                isExternal: true,
-              },
-
-              {
-                icon: Phone,
-                title: "Phone",
-                details: "(02) 8872-9664",
-                link: "tel:(02) 8872-9664",
-                isExternal: false,
-              },
-              {
-                icon: Mail,
-                title: "Email",
-                details: "barangay.pamplonatres.lpc@gmail.com",
-                link: "mailto:barangay.pamplonatres.lpc@gmail.com",
-                isExternal: false,
-              },
-              {
-                icon: Clock,
-                title: "Office Hours",
-                details: "Monday - Friday: 8:00 AM - 5:00 PM",
-                link: null,
-                isExternal: false,
-              },
-            ].map((item, i) => (
+            {contactItems.map((item, i) => (
               <motion.div
                 key={i}
                 whileHover={{ scale: 1.05, x: 10 }}
@@ -348,7 +379,7 @@ export default function ContactPage() {
           className="bg-white rounded-2xl overflow-hidden shadow-lg border border-slate-100"
         >
           <div className="w-full h-96 bg-slate-50 flex items-center justify-center">
-            <Map />
+            <MapEmbed />
           </div>
         </motion.div>
       </section>
@@ -361,13 +392,13 @@ export default function ContactPage() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-3xl md:text-4xl font-bold text-[#b91c1c] mb-6">
-              Access Government Services Easily
+              Access Barangay Services Easily
             </h2>
 
             <p className="text-gray-600 text-lg mb-8 max-w-3xl mx-auto">
-              Manage your local government needs in one platform—request
-              documents, track applications, and stay updated with city services
-              with just a few clicks.
+              Manage your Barangay Talon Tres transactions in one platform:
+              request documents, track your applications, and stay updated on
+              barangay services with just a few clicks.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

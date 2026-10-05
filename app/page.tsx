@@ -38,6 +38,18 @@ interface NewsArticle {
   };
 }
 
+/* ------------------------------------------------------------------ */
+/* BARANGAY DATA — edit here only.                                     */
+/* CONFIRM items need checking with the Barangay Hall.                 */
+/* ------------------------------------------------------------------ */
+const HOME = {
+  communityMembers: "18,500+", // per barangay records
+  servicesOffered: "14+", // CONFIRM: should match the list in ServicesSection
+  requestsProcessed: "500+", // CONFIRM: from your platform records
+  foundedYear: "1978", // PD No. 1336, April 3, 1978
+  districtBadge: "4th District, NCR", // Las Piñas is in Metro Manila's Fourth District
+};
+
 // Hero background videos, served from /public. Drop your files in
 // public/videos/ (or adjust these paths to match your actual filenames) —
 // the carousel auto-advances to the next clip when the current one
@@ -190,9 +202,13 @@ export default function Home() {
   }, [selectedArticle]);
 
   const stats = [
-    { label: "Community Members", value: "18,500+", icon: Users },
-    { label: "Services Offered", value: "14+", icon: Zap },
-    { label: "Requests Processed", value: "500+", icon: Clock },
+    { label: "Community Members", value: HOME.communityMembers, icon: Users },
+    { label: "Services Offered", value: HOME.servicesOffered, icon: Zap },
+    {
+      label: "Requests Processed",
+      value: HOME.requestsProcessed,
+      icon: Clock,
+    },
   ];
 
   const formatDate = (dateString: string) => {
@@ -392,7 +408,7 @@ export default function Home() {
       <section className="relative py-20 px-4 sm:px-6 lg:px-8 bg-white overflow-hidden">
         {/* Soft decorative glow, consistent with CTA section styling */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-red-100/40 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-green-100/40 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-red-100/40 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
 
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
@@ -421,7 +437,7 @@ export default function Home() {
                   <p className="text-sm font-bold text-gray-900">
                     Las Piñas City
                   </p>
-                  <p className="text-xs text-gray-500">4th District, NCR</p>
+                  <p className="text-xs text-gray-500">{HOME.districtBadge}</p>
                 </div>
               </div>
             </motion.div>
@@ -443,15 +459,15 @@ export default function Home() {
                 </span>
               </h2>
               <p className="text-lg text-gray-700 leading-relaxed mb-8 font-medium">
-                Nestled in the vibrant City of Las Piñas, Barangay Talon Tres is
-                a thriving community where tradition, service, and progress come
-                together. Home to thousands of residents, our barangay is
-                committed to creating a safe, inclusive, and welcoming
-                environment where families, businesses, and future generations
-                can thrive. Guided by transparency, unity, and public service,
-                we continue to strengthen our community through responsive
-                governance, meaningful programs, and initiatives that improve
-                the quality of life for every resident.
+                Barangay Talon Tres, in the City of Las Piñas, has been serving
+                its community since {HOME.foundedYear}. Today it is home to more
+                than {HOME.communityMembers.replace("+", "")} community members.
+                Our barangay is committed to creating a safe, inclusive, and
+                welcoming environment where families, businesses, and future
+                generations can thrive. Guided by transparency, unity, and
+                public service, we continue to strengthen our community through
+                responsive governance, meaningful programs, and initiatives that
+                improve the quality of life for every resident.
               </p>
               <Link href="/about">
                 <motion.button
@@ -521,7 +537,8 @@ export default function Home() {
             </h2>
             <div className="w-32 h-1.5 bg-amber-500 rounded-full mx-auto mb-4" />
             <p className="text-lg text-gray-700 max-w-2xl mx-auto font-medium">
-              Stay informed with recent news and announcements from our barangay
+              Stay informed with recent news and announcements from Barangay
+              Talon Tres
             </p>
           </motion.div>
 
@@ -719,7 +736,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-red-900 to-emerald-800 relative overflow-hidden">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-red-900 to-[#7f1d1d] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
 
@@ -734,8 +751,8 @@ export default function Home() {
               Ready to Get Started?
             </h2>
             <p className="text-xl text-white/95 max-w-2xl mx-auto font-medium drop-shadow-md">
-              Join thousands of residents using our platform to access services
-              and stay connected with our community
+              Join the residents of Talon Tres using our platform to access
+              barangay services and stay connected with our community
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/register">
